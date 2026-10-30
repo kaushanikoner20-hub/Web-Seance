@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Séance — Interactive Demo Walkthrough</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #0b0f0d;
+      color: #e2e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 2rem 1rem;
+    }
+    .container {
+      background: #121815;
+      border: 1px solid #1e2c24;
+      border-radius: 16px;
+      padding: 1.75rem;
+      max-width: 760px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.08);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #1e2c24;
+      padding-bottom: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .header-left { display: flex; align-items: center; gap: 0.75rem; }
+    .header-left span { font-size: 2rem; }
+    .header-title { font-family: monospace; font-weight: 700; color: #00ff88; font-size: 0.95rem; letter-spacing: 0.05em; }
+    .header-sub { font-size: 0.75rem; color: #64748b; margin-top: 2px; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 0.3rem 0.65rem; border-radius: 20px;
+      font-size: 0.7rem; font-family: monospace; font-weight: 600;
+      background: rgba(0,255,136,0.08); color: #00ff88;
+      border: 1px solid rgba(0,255,136,0.3);
+    }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: #00ff88; }
+    .progress-row {
+      display: flex; justify-content: space-between;
+      font-size: 0.7rem; font-family: monospace; color: #64748b;
+      margin-bottom: 0.4rem;
+    }
+    .act-label { color: #00ff88; font-weight: 600; }
+    .progress-track {
+      background: #1a251f; height: 6px; border-radius: 3px;
+      overflow: hidden; border: 1px solid #23342b; margin-bottom: 1rem;
+    }
+    .progress-fill {
+      background: linear-gradient(90deg, #00ff88, #10b981);
+      height: 100%; border-radius: 3px;
+      transition: width 0.35s ease;
+    }
+    .scene-card {
+      background: #0b0f0d; border: 1px solid #1e2c24;
+      border-radius: 10px; padding: 1.1rem; margin-bottom: 1rem;
+    }
+    .scene-header {
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid #111816; padding-bottom: 0.6rem; margin-bottom: 0.75rem;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .scene-title { font-size: 0.95rem; font-weight: 700; color: #f1f5f9; }
+    .scene-badge {
+      font-size: 0.68rem; font-family: monospace; padding: 0.15rem 0.5rem;
+      border-radius: 4px; border: 1px solid; font-weight: 600;
+    }
+    .scene-display {
+      background: #060d09; border: 1px solid #1a2e22;
+      border-radius: 8px; padding: 0.9rem; font-family: monospace;
+      font-size: 0.78rem; line-height: 1.6; color: #cbd5e1;
+      min-height: 130px; margin-bottom: 0.75rem;
+    }
+    .narration-box {
+      background: #0f1a13; border-left: 3px solid #00ff88;
+      padding: 0.65rem 0.85rem; border-radius: 0 6px 6px 0;
+      font-size: 0.78rem; color: #94a3b8; line-height: 1.5;
+    }
+    .narration-label { color: #00ff88; font-weight: 700; font-family: monospace; }
+    .controls {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 0.85rem; border-top: 1px solid #1e2c24;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .btn-group { display: flex; gap: 0.5rem; align-items: center; }
+    button {
+      padding: 0.45rem 0.95rem; border-radius: 6px; font-size: 0.75rem;
+      font-family: monospace; font-weight: 600; cursor: pointer;
+      border: 1px solid #283d32; background: #1a251f; color: #e2e8f0;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    button:hover:not(:disabled) { background: #23342b; border-color: #3a5545; }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-play {
+      background: #00ff88; color: #06110a; border: none; font-weight: 700;
+    }
+    .btn-play:hover:not(:disabled) { background: #22c55e; }
+    .notice {
+      font-size: 0.72rem; color: #475569; font-style: italic; text-align: center;
+      padding-top: 0.7rem; border-top: 1px solid #111816; margin-top: 0.25rem;
+      line-height: 1.5;
+    }
+    .notice a { color: #38bdf8; }
+    .tag-ext { color: #38bdf8; font-weight: 700; }
+    .tag-same { color: #34d399; font-weight: 700; }
+    .tag-verified { color: #00ff88; font-weight: 700; }
+    .tag-ai { color: #f59e0b; font-weight: 700; }
+    .tag-miss { color: #f87171; font-weight: 700; }
+    .row { display: flex; justify-content: space-between; gap: 0.5rem;
+           padding: 0.3rem 0; border-bottom: 1px solid #141f19; }
+    .row:last-child { border-bottom: none; }
+    .code-block {
+      background: #060d09; border: 1px solid #1a2e22; border-radius: 4px;
+      padding: 0.5rem 0.7rem; margin: 0.4rem 0; font-family: monospace; font-size: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <span>🕯️</span>
+      <div>
+        <div class="header-title">WEB SÉANCE — INTERACTIVE DEMO WALKTHROUGH</div>
+        <div class="header-sub">Hacktoberfest 2026 · Week 4 · Ghost in the Machine</div>
+      </div>
+    </div>
+    <div class="badge"><span class="dot"></span>LOCAL DEMO — NOT A HOSTED APP</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-row">
+    <span class="act-label" id="act-indicator">ACT 1 OF 6</span>
+    <span id="time-indicator">0:00 – 2:30</span>
+  </div>
+  <div class="progress-track">
+    <div class="progress-fill" id="progress-bar" style="width:16.6%"></div>
+  </div>
+
+  <!-- Scene card -->
+  <div class="scene-card">
+    <div class="scene-header">
+      <div class="scene-title" id="scene-title"></div>
+      <div class="scene-badge" id="scene-badge"></div>
+    </div>
+    <div class="scene-display" id="scene-display"></div>
+    <div class="narration-box">
+      <span class="narration-label">🎙 NARRATION: </span>
+      <span id="narration-text"></span>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="btn-group">
+      <button id="btn-prev" onclick="prevScene()">◀ PREV</button>
+      <button class="btn-play" id="btn-play" onclick="togglePlay()">
+        <span id="play-icon">▶</span> <span id="play-text">PLAY</span>
+      </button>
+      <button id="btn-next" onclick="nextScene()">NEXT ▶</button>
+    </div>
+    <div style="font-size:0.72rem; font-family:monospace; color:#64748b;">
+      To run locally: <code style="color:#34d399;">streamlit run app.py</code>
+    </div>
+  </div>
+
+  <!-- Honest note -->
+  <div class="notice">
+    This is an <strong style="color:#e2e8f0">interactive walkthrough</strong> of the Web Séance project workflow — not a recorded video and not a hosted live application.<br>
+    To use the real application, clone the repository and run <code>streamlit run app.py</code> after installing dependencies.<br>
+    GitHub Pages is not configured for this repository. The interactive demo is browseable at
+    <a href="https://github.com/kaushanikoner20-hub/Web-Seance/blob/main/docs/interactive-demo.html">docs/interactive-demo.html</a> on GitHub.
+  </div>
+
+</div>
+
+<script>
+const scenes = [
+  {
+    act: "ACT 1: SÉANCE CHAMBER",
+    time: "0:00 – 0:25",
+    title: "🕯️ The Archaeological Mission",
+    badge: "PROJECT OVERVIEW",
+    badgeStyle: "background:rgba(0,255,136,0.08);color:#00ff88;border-color:rgba(0,255,136,0.3);",
+    display: `<div>
+  <div class="tag-verified">PROJECT: Web Séance</div>
+  <div style="color:#94a3b8;margin:0.4rem 0;">MISSION: AI-assisted digital archaeology for forgotten internet culture.</div>
+  <div class="code-block">
+    <div><span class="tag-verified">●</span> <strong>Archival Evidence:</strong> Facts from verified Wayback Machine HTML captures.</div>
+    <div><span class="tag-ai">●</span> <strong>AI Interpretation:</strong> Non-definitive hypotheses from local Gemma 3:4b via Ollama.</div>
+    <div style="color:#475569;margin-top:0.4rem;font-style:italic;">"A hyperlink proves only that a URL appeared in archived HTML. It does not prove the site owners knew each other."</div>
+  </div>
+  <div style="color:#475569;margin-top:0.4rem;">Evidence store: 5 verified pages · 51 extracted hyperlinks</div>
+</div>`,
+    narration: "Web Séance investigates forgotten early web culture through authentic historical captures preserved in the Internet Archive. It maintains strict separation between archival facts and AI-generated hypotheses."
+  },
+  {
+    act: "ACT 2: ARCHIVE EXPLORER",
+    time: "0:25 – 0:55",
+    title: "📜 Curated Evidence Vault",
+    badge: "VERIFIED CAPTURES",
+    badgeStyle: "background:rgba(56,189,248,0.08);color:#38bdf8;border-color:rgba(56,189,248,0.3);",
+    display: `<div>
+  <div style="color:#38bdf8;font-weight:700;margin-bottom:0.4rem;">5 AUTHENTIC ARCHIVED CAPTURES (data/archive_pages.json):</div>
+  <div class="row"><span style="color:#e2e8f0;">[P1] Jamie Zawinski · jwz.org</span><span style="color:#64748b;">1998-12-02 · 6 links</span></div>
+  <div class="row"><span style="color:#e2e8f0;">[P2] Eric S. Raymond · catb.org/~esr</span><span style="color:#64748b;">2003-01-24 · 24 links</span></div>
+  <div class="row"><span style="color:#e2e8f0;">[P3] ZOMBO.com · zombo.com</span><span style="color:#64748b;">1999-11-28 · 0 links</span></div>
+  <div class="row"><span style="color:#e2e8f0;">[P4] JODI.org · jodi.org</span><span style="color:#64748b;">1996-11-08 · 1 link</span></div>
+  <div class="row"><span style="color:#e2e8f0;">[P5] Tim Berners-Lee · w3.org</span><span style="color:#64748b;">1997-06-05 · 20 links</span></div>
+  <div style="color:#00ff88;font-size:0.72rem;margin-top:0.5rem;">Live CDX query available in-app with 2s polite rate throttling.</div>
+</div>`,
+    narration: "The Archive Explorer shows five authentic historical web captures spanning 1996 to 2003, retrieved directly from the Internet Archive CDX API. The app also supports live excavation of any custom URL."
+  },
+  {
+    act: "ACT 3: FORENSIC INVESTIGATION",
+    time: "0:55 – 1:25",
+    title: "🔬 Page Investigation & Link Extraction",
+    badge: "TRACEABLE EVIDENCE",
+    badgeStyle: "background:rgba(0,255,136,0.08);color:#00ff88;border-color:rgba(0,255,136,0.3);",
+    display: `<div>
+  <div style="color:#00ff88;font-weight:700;">PAGE P2: Eric Raymond's Home Page (2003-01-24)</div>
+  <div style="color:#64748b;margin:0.25rem 0;font-size:0.72rem;">Source: http://www.catb.org:80/~esr/ · Raw id_ capture · SHA-256 fingerprinted</div>
+  <div class="code-block">
+    <div><span class="tag-ext">[P2-L3]  EXTERNAL</span> → http://www.opensource.org</div>
+    <div><span class="tag-ext">[P2-L5]  EXTERNAL</span> → http://www.libpng.org/pub/png/pngapbr.html</div>
+    <div><span class="tag-ext">[P2-L10] EXTERNAL</span> → http://www.mutt.org</div>
+    <div><span class="tag-same">[P2-L1]  SAME-SITE</span> → http://www.catb.org/~esr/writings/</div>
+  </div>
+  <div style="color:#475569;font-size:0.72rem;margin-top:0.4rem;">ai_inferred: false · extraction_method: beautifulsoup4_html_parser</div>
+</div>`,
+    narration: "Every outgoing hyperlink extracted from raw archived HTML receives a unique Evidence ID. The ai_inferred flag is always false for these records, distinguishing them from any AI-generated interpretation."
+  },
+  {
+    act: "ACT 4: CONNECTION EXPLORER",
+    time: "1:25 – 1:55",
+    title: "🕸️ Verified Hyperlink Network",
+    badge: "NO SPECULATIVE EDGES",
+    badgeStyle: "background:rgba(167,139,250,0.08);color:#a78bfa;border-color:rgba(167,139,250,0.3);",
+    display: `<div>
+  <div style="color:#a78bfa;font-weight:700;margin-bottom:0.4rem;">INTERACTIVE D3.js FORCE GRAPH</div>
+  <div style="color:#94a3b8;margin-bottom:0.5rem;">Every edge = one verified extracted hyperlink with supporting Evidence IDs.</div>
+  <div class="code-block">
+    <div>[Source: P2] ─── (P2-L3) ───→ [opensource.org]</div>
+    <div>[Source: P2] ─── (P2-L10) ──→ [mutt.org]</div>
+    <div>[Source: P5] ─── (P5-L4) ───→ [cern.ch]</div>
+    <div>[Source: P5] ─── (P5-L1) ───→ [lcs.mit.edu]</div>
+  </div>
+  <div style="color:#475569;font-size:0.72rem;margin-top:0.4rem;">Graph nodes: 5 source pages + 12 external domain targets. Zero synthetic connections.</div>
+</div>`,
+    narration: "The Connection Explorer visualises verified hyperlink trails as a force-directed network. Every node and edge is grounded in data extracted from archived HTML. No speculative or probabilistic edges are generated."
+  },
+  {
+    act: "ACT 5: AI HISTORIAN",
+    time: "1:55 – 2:20",
+    title: "🧠 Local Gemma 3:4b Consultation",
+    badge: "LOCAL OLLAMA ONLY",
+    badgeStyle: "background:rgba(245,158,11,0.08);color:#f59e0b;border-color:rgba(245,158,11,0.3);",
+    display: `<div>
+  <div style="color:#f59e0b;font-weight:700;margin-bottom:0.4rem;">HISTORIAN ASSESSMENT (gemma3:4b via Ollama · localhost:11434)</div>
+  <div class="code-block">
+    <div><span class="tag-verified">1. CONFIRMED FACTS:</span></div>
+    <div style="padding-left:0.6rem;">Page captured 2003-01-24 [P2]. Links to opensource.org [P2-L3], mutt.org [P2-L10].</div>
+    <div style="margin-top:0.3rem;"><span class="tag-ai">2. PLAUSIBLE HYPOTHESES (AI):</span></div>
+    <div style="padding-left:0.6rem;">Topics suggest open-source software interests. (Non-definitive.)</div>
+    <div style="margin-top:0.3rem;"><span class="tag-miss">3. MISSING INFORMATION:</span></div>
+    <div style="padding-left:0.6rem;">Insufficient evidence to determine personal relationships to linked site owners.</div>
+  </div>
+  <div style="color:#475569;font-size:0.72rem;margin-top:0.4rem;">Response requires Ollama running locally. No data leaves the machine. Automated citation audit checks for hallucinated Evidence IDs.</div>
+</div>`,
+    narration: "The AI Historian feature requires Ollama running locally with the gemma3:4b model. No data is sent to external APIs. The application includes automated citation auditing that flags any Evidence IDs the model cites that do not exist in the provided dossier."
+  },
+  {
+    act: "ACT 6: METHODOLOGY",
+    time: "2:20 – 2:30",
+    title: "🛡️ Evidence Integrity & Limitations",
+    badge: "HONEST DISCLOSURE",
+    badgeStyle: "background:rgba(0,255,136,0.08);color:#00ff88;border-color:rgba(0,255,136,0.3);",
+    display: `<div>
+  <div style="color:#00ff88;font-weight:700;margin-bottom:0.5rem;">AUTOMATED TESTS (run: python -m unittest discover -s tests -v)</div>
+  <div class="code-block">
+    Ran 13 tests in ~2.1s · Result: OK (all pass as of build date 2026-10-30)
+  </div>
+  <div style="color:#94a3b8;margin-top:0.5rem;line-height:1.6;">
+    <div><span class="tag-verified">✓</span> Links extracted from verbatim Wayback id_ HTML (no toolbar injection)</div>
+    <div><span class="tag-verified">✓</span> ai_inferred: false on all extracted link records</div>
+    <div><span class="tag-ai">⚠</span> AI response speed depends on local hardware (30–60s typical on CPU)</div>
+    <div><span class="tag-miss">✗</span> GitHub Pages not configured — app runs locally only</div>
+    <div><span class="tag-miss">✗</span> A link does not prove social ties between site owners</div>
+  </div>
+</div>`,
+    narration: "Web Séance is transparent about what it can and cannot verify. All 13 automated tests pass. The application runs locally — it is not deployed publicly. Archive capture content is subject to Internet Archive availability and historical crawl coverage."
+  }
+];
+
+let currentScene = 0;
+let isPlaying = false;
+let timer = null;
+
+function renderScene() {
+  const s = scenes[currentScene];
+  const total = scenes.length;
+
+  document.getElementById("act-indicator").textContent = `ACT ${currentScene + 1} OF ${total}`;
+  document.getElementById("time-indicator").textContent = s.time;
+  document.getElementById("progress-bar").style.width = `${((currentScene + 1) / total) * 100}%`;
+  document.getElementById("scene-title").textContent = s.title;
+
+  const badge = document.getElementById("scene-badge");
+  badge.textContent = s.badge;
+  badge.style.cssText = s.badgeStyle;
+
+  document.getElementById("scene-display").innerHTML = s.display;
+  document.getElementById("narration-text").textContent = s.narration;
+
+  document.getElementById("btn-prev").disabled = currentScene === 0;
+  document.getElementById("btn-next").disabled = currentScene === total - 1;
+}
+
+function nextScene() {
+  if (currentScene < scenes.length - 1) { currentScene++; renderScene(); }
+  else pause();
+}
+function prevScene() {
+  if (currentScene > 0) { currentScene--; renderScene(); }
+}
+function togglePlay() {
+  isPlaying ? pause() : play();
+}
+function play() {
+  isPlaying = true;
+  document.getElementById("play-icon").textContent = "⏸";
+  document.getElementById("play-text").textContent = "PAUSE";
+  timer = setInterval(() => {
+    if (currentScene < scenes.length - 1) nextScene();
+    else pause();
+  }, 7000);
+}
+function pause() {
+  isPlaying = false;
+  document.getElementById("play-icon").textContent = "▶";
+  document.getElementById("play-text").textContent = "PLAY";
+  if (timer) { clearInterval(timer); timer = null; }
+}
+
+renderScene();
+</script>
+</body>
+</html>
