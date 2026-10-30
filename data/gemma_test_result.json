@@ -1,0 +1,24 @@
+{
+  "status": "TESTED",
+  "model": "gemma3:4b",
+  "run_started_utc": "2026-10-29T15:18:26+00:00",
+  "response_seconds": 88.5,
+  "error": null,
+  "evidence_sent": "EVIDENCE\nPage P2:\n- Source URL recorded by the archive: http://www.catb.org:80/~esr/\n- Capture date (from timestamp 20030124110141, UTC): 2003-01-24\n- Page title: Eric Raymond's Home Page\nLinks found in the archived HTML of P2 that point to other websites:\n- P2-L3: http://www.opensource.org\n- P2-L5: http://www.libpng.org/pub/png/pngapbr.html\n- P2-L10: http://www.mutt.org\n- P2-L13: http://www.oreilly.com/catalog/cathbazpaper/\n- P2-L16: http://armedndangerous.blogspot.com\n- P2-L18: http://www.ccil.org\n- P2-L22: http://sunsite.unc.edu/pub/Linux/welcome.html",
+  "gemma_answer": "**CONFIRMED FACTS**\n\n*   The page was archived on 2003-01-24 (P2).\n*   The source URL recorded by the archive is http://www.catb.org:80/~esr/ (P2).\n*   The page title is \"Eric Raymond's Home Page\" (P2).\n*   The page contains the following links:\n    *   http://www.opensource.org (P2-L3)\n    *   http://www.libpng.org/pub/png/pngapbr.html (P2-L5)\n    *   http://www.mutt.org (P2-L10)\n    *   http://www.oreilly.com/catalog/cathbazpaper/ (P2-L13)\n    *   http://armedndangerous.blogspot.com (P2-L16)\n    *   http://www.ccil.org (P2-L18)\n    *   http://sunsite.unc.edu/pub/Linux/welcome.html (P2-L22)\n\n**POSSIBLE INTERPRETATIONS**\n\n1.  **Professional Interests:** The links suggest Eric Raymond was interested in open-source software development, image formats (PNG), email clients (Mutt), online learning (O'Reilly), and Linux. (P2-L3, P2-L5, P2-L10, P2-L13, P2-L16, P2-L22)\n2.  **Community Engagement:** The links to open source organizations and the blog suggest Raymond was involved in or following discussions within these communities. (P2-L3, P2-L16)\n3.  **Research and Development:** The links to LibPNG and the Linux welcome page indicate potential involvement in research or development related to image compression and operating systems. (P2-L5, P2-L22)\n\n**WHAT IS NOT KNOWN**\n\n*   The purpose of the page is not known.\n*   The nature of Eric Raymond's work is not known.\n*   The relationships between the linked websites and Eric Raymond are not known.\n*   The reasons for selecting these specific links are not known.",
+  "crude_checks": {
+    "evidence_ids_cited": [
+      "P2-L10",
+      "P2-L13",
+      "P2-L16",
+      "P2-L18",
+      "P2-L22",
+      "P2-L3",
+      "P2-L5"
+    ],
+    "cited_ids_not_in_evidence": [],
+    "years_in_answer_not_in_evidence": [],
+    "says_insufficient_evidence": false
+  },
+  "note": "One small test only. It can reveal obvious problems but does not measure how accurate the model is. The answer must be read by a human."
+}

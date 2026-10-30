@@ -1,0 +1,159 @@
+{
+  "status": "TESTED",
+  "run_started_utc": "2026-10-28T15:33:39+00:00",
+  "requests_made": 5,
+  "stopped_early_reason": null,
+  "note": "Real answers from the CDX API. Each capture_url was built from the timestamp and original URL and has NOT been opened yet.",
+  "results": [
+    {
+      "candidate_url": "http://www.jwz.org/",
+      "query_url": "https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.jwz.org%2F&output=json&fl=timestamp%2Coriginal%2Cstatuscode%2Cmimetype&filter=statuscode%3A200&from=1996&to=2008&limit=3",
+      "outcome": "captures_found",
+      "http_status": null,
+      "error": null,
+      "captures": [
+        {
+          "timestamp": "19981202075235",
+          "original_url": "http://www.jwz.org:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19981202075235/http://www.jwz.org:80/"
+        },
+        {
+          "timestamp": "19981212030227",
+          "original_url": "http://www.jwz.org:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19981212030227/http://www.jwz.org:80/"
+        },
+        {
+          "timestamp": "19990125100521",
+          "original_url": "http://www.jwz.org:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19990125100521/http://www.jwz.org:80/"
+        }
+      ]
+    },
+    {
+      "candidate_url": "http://www.catb.org/~esr/",
+      "query_url": "https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.catb.org%2F~esr%2F&output=json&fl=timestamp%2Coriginal%2Cstatuscode%2Cmimetype&filter=statuscode%3A200&from=1996&to=2008&limit=3",
+      "outcome": "captures_found",
+      "http_status": null,
+      "error": null,
+      "captures": [
+        {
+          "timestamp": "20030124110141",
+          "original_url": "http://www.catb.org:80/~esr/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/20030124110141/http://www.catb.org:80/~esr/"
+        },
+        {
+          "timestamp": "20030206095710",
+          "original_url": "http://catb.org:80/~esr/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/20030206095710/http://catb.org:80/~esr/"
+        },
+        {
+          "timestamp": "20030501095940",
+          "original_url": "http://catb.org:80/~esr/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/20030501095940/http://catb.org:80/~esr/"
+        }
+      ]
+    },
+    {
+      "candidate_url": "http://www.zombo.com/",
+      "query_url": "https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.zombo.com%2F&output=json&fl=timestamp%2Coriginal%2Cstatuscode%2Cmimetype&filter=statuscode%3A200&from=1996&to=2008&limit=3",
+      "outcome": "captures_found",
+      "http_status": null,
+      "error": null,
+      "captures": [
+        {
+          "timestamp": "19991128095921",
+          "original_url": "http://www.zombo.com:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19991128095921/http://www.zombo.com:80/"
+        },
+        {
+          "timestamp": "19991129021911",
+          "original_url": "http://zombo.com:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19991129021911/http://zombo.com:80/"
+        },
+        {
+          "timestamp": "20000311102918",
+          "original_url": "http://www.zombo.com:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/20000311102918/http://www.zombo.com:80/"
+        }
+      ]
+    },
+    {
+      "candidate_url": "http://www.jodi.org/",
+      "query_url": "https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.jodi.org%2F&output=json&fl=timestamp%2Coriginal%2Cstatuscode%2Cmimetype&filter=statuscode%3A200&from=1996&to=2008&limit=3",
+      "outcome": "captures_found",
+      "http_status": null,
+      "error": null,
+      "captures": [
+        {
+          "timestamp": "19961108051821",
+          "original_url": "http://www.jodi.org:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19961108051821/http://www.jodi.org:80/"
+        },
+        {
+          "timestamp": "19961222083809",
+          "original_url": "http://www.jodi.org:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19961222083809/http://www.jodi.org:80/"
+        },
+        {
+          "timestamp": "19970105020510",
+          "original_url": "http://www.jodi.org:80/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19970105020510/http://www.jodi.org:80/"
+        }
+      ]
+    },
+    {
+      "candidate_url": "http://www.w3.org/People/Berners-Lee/",
+      "query_url": "https://web.archive.org/cdx/search/cdx?url=http%3A%2F%2Fwww.w3.org%2FPeople%2FBerners-Lee%2F&output=json&fl=timestamp%2Coriginal%2Cstatuscode%2Cmimetype&filter=statuscode%3A200&from=1996&to=2008&limit=3",
+      "outcome": "captures_found",
+      "http_status": null,
+      "error": null,
+      "captures": [
+        {
+          "timestamp": "19970605014858",
+          "original_url": "http://www.w3.org:80/People/Berners-Lee/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19970605014858/http://www.w3.org:80/People/Berners-Lee/"
+        },
+        {
+          "timestamp": "19970605044619",
+          "original_url": "http://www.w3.org:80/people/Berners-Lee/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19970605044619/http://www.w3.org:80/people/Berners-Lee/"
+        },
+        {
+          "timestamp": "19970730035021",
+          "original_url": "http://www.w3.org:80/People/Berners-Lee/",
+          "status_code": "200",
+          "mime_type": "text/html",
+          "capture_url": "https://web.archive.org/web/19970730035021/http://www.w3.org:80/People/Berners-Lee/"
+        }
+      ]
+    }
+  ]
+}
