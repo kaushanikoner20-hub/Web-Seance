@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Web Séance – Interactive Walkthrough</title>
+<!--
+  Self-contained: no external scripts, fonts or images.
+  This is an illustrative, text-based walkthrough, not a recording and not the live app.
+  MAINTAINER CHECK: before publishing, compare every figure in the scenes below
+  (dates, link counts, Evidence IDs, SHA-256 prefix, edges) with data/archive_pages.json
+  and data/link_evidence.json, and correct anything that differs.
+-->
+<style>
+  :root {
+    --bg: #0b0f0d; --card: #121915; --stage: #0c120f; --border: #24322b;
+    --fg: #e6efe9; --muted: #8fa399; --green: #34d399; --cyan: #22d3ee;
+    --purple: #c084fc; --amber: #fbbf24; --rose: #fb7185; --panel: #0f1713;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--fg);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { padding: 16px; }
+  .player { max-width: 720px; margin: 0 auto; background: var(--card);
+    border: 1px solid var(--border); border-radius: 12px; padding: 16px;
+    min-height: 460px; display: flex; flex-direction: column; gap: 12px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  header { display: flex; gap: 10px; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 12px; }
+  header .flame { font-size: 22px; }
+  header h1 { margin: 0; font-size: 14px; letter-spacing: .04em; color: var(--green); }
+  header p { margin: 2px 0 0; font-size: 12px; color: var(--muted); }
+  .note { font-size: 11px; color: var(--muted); border: 1px dashed var(--border);
+    border-radius: 6px; padding: 6px 8px; }
+  .progress-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
+  .bar { height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .bar > div { height: 100%; background: var(--green); width: 0; transition: width .25s; }
+  .stage { background: rgba(11,15,13,.6); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .stage-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .stage-head h2 { margin: 0; font-size: 14px; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 4px; border: 1px solid; }
+  .b-green { background: #052e22; color: var(--green); border-color: #166a50; }
+  .b-cyan { background: #082f3a; color: var(--cyan); border-color: #176b80; }
+  .b-purple { background: #2a1245; color: var(--purple); border-color: #6b3aa0; }
+  .b-amber { background: #3a2a05; color: var(--amber); border-color: #8a6a14; }
+  .display { background: var(--stage); border: 1px solid #1b3a2c; border-radius: 6px; padding: 10px;
+    font-size: 12px; line-height: 1.55; color: #cbd5d0; min-height: 150px; }
+  .display .box { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 8px; margin-top: 8px; }
+  .row { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; border-bottom: 1px solid var(--border); flex-wrap: wrap; }
+  .g { color: var(--green); } .c { color: var(--cyan); } .p { color: var(--purple); }
+  .a { color: var(--amber); } .r { color: var(--rose); } .m { color: var(--muted); }
+  .narration { border-left: 2px solid var(--green); background: var(--card); padding: 8px 12px;
+    border-radius: 0 6px 6px 0; font-size: 12.5px; line-height: 1.5; }
+  .narration b { color: var(--green); }
+  .controls { display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    border-top: 1px solid var(--border); padding-top: 12px; flex-wrap: wrap; }
+  .btns { display: flex; gap: 8px; }
+  button { font: inherit; font-size: 12px; padding: 7px 12px; border-radius: 6px; cursor: pointer;
+    background: var(--bg); color: var(--fg); border: 1px solid var(--border); }
+  button:hover:not(:disabled) { background: var(--border); }
+  button:disabled { opacity: .4; cursor: not-allowed; }
+  button.primary { background: var(--green); color: #04130c; border-color: var(--green); font-weight: 700; min-width: 92px; }
+  button.primary:hover { background: #6ee7b7; }
+  button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .dots { display: flex; gap: 6px; }
+  .dots button { width: 12px; height: 12px; padding: 0; border-radius: 50%; }
+  .dots button[aria-current="true"] { background: var(--green); border-color: var(--green); }
+  code { background: #0b1511; border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; color: var(--green); }
+</style>
+</head>
+<body>
+<main class="player" aria-label="Web Séance interactive walkthrough">
+  <header>
+    <span class="flame" aria-hidden="true">🕯️</span>
+    <div>
+      <h1 class="mono">WEB SÉANCE – INTERACTIVE WALKTHROUGH</h1>
+      <p>AI-assisted digital archaeology of the early web</p>
+    </div>
+  </header>
+
+  <div class="note">Illustrative walkthrough. Panels are simplified recreations of the app, not live output. Run the app locally to explore real data.</div>
+
+  <div>
+    <div class="progress-row mono">
+      <span id="scene-indicator">Scene 1 of 6</span>
+      <span id="scene-name"></span>
+    </div>
+    <div class="bar" role="progressbar" aria-valuemin="1" aria-valuemax="6" id="bar-wrap"><div id="bar"></div></div>
+  </div>
+
+  <section class="stage" aria-live="polite">
+    <div class="stage-head">
+      <h2 id="scene-title"></h2>
+      <span id="scene-badge" class="badge mono"></span>
+    </div>
+    <div id="scene-display" class="display mono"></div>
+    <div class="narration"><b class="mono">Narration:</b> <span id="narration-text"></span></div>
+  </section>
+
+  <div class="controls">
+    <div class="btns">
+      <button id="btn-prev" type="button">◀ Previous</button>
+      <button id="btn-play" type="button" class="primary">▶ Play</button>
+      <button id="btn-next" type="button">Next ▶</button>
+    </div>
+    <div class="dots" id="dots" role="group" aria-label="Jump to scene"></div>
+  </div>
+</main>
+
+<script>
+(function () {
+  var scenes = [
+    {
+      name: "Séance Chamber",
+      title: "🕯️ The archaeological mission",
+      badge: "Provenance", cls: "b-green",
+      display:
+        '<div class="g"><b>PROJECT: Web Séance</b></div>' +
+        '<div class="m">Digital archaeology for forgotten internet culture.</div>' +
+        '<div class="box"><div class="g"><b>Evidence vs. interpretation</b></div>' +
+        '<div>● <span class="g">Archival evidence:</span> links and metadata taken from Internet Archive captures.</div>' +
+        '<div>● <span class="a">AI interpretation:</span> cautious hypotheses from a local Gemma 3:4b model.</div>' +
+        '<div class="m" style="margin-top:6px">"A hyperlink proves a URL appeared in the HTML, not a friendship."</div></div>',
+      narration: "Welcome to Web Séance. The internet leaves traces, and this project helps investigate them. Evidence comes from archived web captures, and AI interpretation is kept clearly separate from it."
+    },
+    {
+      name: "Archive Explorer",
+      title: "📜 Curated vault and live search",
+      badge: "Archived captures", cls: "b-cyan",
+      display:
+        '<div class="c"><b>Archived pages in the vault (sample)</b></div>' +
+        '<div class="row"><span>[P1] Jamie Zawinski (jwz.org)</span><span class="m">1998-12-02 · 6 links</span></div>' +
+        '<div class="row"><span>[P2] Eric S. Raymond (catb.org/~esr)</span><span class="m">2003-01-24 · 24 links</span></div>' +
+        '<div class="row"><span>[P5] Tim Berners-Lee (w3.org)</span><span class="m">1997-06-05 · 20 links</span></div>' +
+        '<div class="m" style="margin-top:8px">The live excavator queries the Internet Archive CDX API for archived sites, with polite rate limiting. It needs an internet connection.</div>',
+      narration: "In the Archive Explorer you can inspect captures of early web pioneers, or query the Internet Archive's CDX server for sites it has archived."
+    },
+    {
+      name: "Forensic Investigation",
+      title: "🔬 Capture metadata and outgoing hyperlinks",
+      badge: "Traceable links", cls: "b-green",
+      display:
+        '<div class="g"><b>PAGE P2: Eric Raymond\'s home page (2003 capture)</b></div>' +
+        '<div class="m">SHA-256: 141b712c4c4784a0c8b6b216999a3… (raw capture)</div>' +
+        '<div class="box row"><span class="c">[P2-L3] external</span><span>http://www.opensource.org</span></div>' +
+        '<div class="box row"><span class="c">[P2-L10] external</span><span>http://www.mutt.org</span></div>' +
+        '<div class="box row"><span class="c">[P2-L13] external</span><span>http://www.oreilly.com/catalog/cathbazpaper</span></div>',
+      narration: "During investigation, each outgoing hyperlink extracted from the archived HTML gets an Evidence ID, along with its capture timestamp and whether it points inside or outside the site."
+    },
+    {
+      name: "Connection Explorer",
+      title: "🕸️ Verified link trails",
+      badge: "Verified edges only", cls: "b-purple",
+      display:
+        '<div class="p"><b>Link graph (text sketch of the app\'s D3.js view)</b></div>' +
+        '<div class="m">Only extracted links become edges. No speculative connections.</div>' +
+        '<div class="box">' +
+        '<div>[P2] ──(P2-L3)──&gt; [opensource.org]</div>' +
+        '<div>[P2] ──(P2-L10)─&gt; [mutt.org]</div>' +
+        '<div>[P5] ──(P5-L1)──&gt; [lcs.mit.edu]</div>' +
+        '<div>[P5] ──(P5-L5)──&gt; [cern.ch]</div></div>' +
+        '<div class="m" style="margin-top:6px">In the app, each edge maps back to its Evidence ID.</div>',
+      narration: "The Connection Explorer draws a force-directed graph of verified hyperlink trails. Every edge is backed by an Evidence ID, so the graph shows only links that exist in the captured HTML."
+    },
+    {
+      name: "Local AI Historian",
+      title: "🧠 Gemma 3:4b with a citation audit",
+      badge: "Local model via Ollama", cls: "b-amber",
+      display:
+        '<div class="a"><b>Historian answer (illustrative sample)</b></div>' +
+        '<div class="box">' +
+        '<div><b class="g">1. Confirmed facts:</b> Page P2 links to the Open Source Initiative [P2-L3] and Mutt [P2-L10].</div>' +
+        '<div><b class="a">2. Hypotheses:</b> The linked topics suggest an interest in open-source software.</div>' +
+        '<div><b class="m">3. Unknown:</b> <span class="r"><b>Insufficient evidence</b></span> to say anything about personal relationships.</div></div>' +
+        '<div class="m" style="margin-top:6px">After each answer, a citation audit checks that every cited Evidence ID exists in the dossier.</div>',
+      narration: "A locally running Gemma 3:4b model can answer questions about a dossier. Prompts require it to cite Evidence IDs, separate facts from hypotheses, and say \"Insufficient evidence\" when the dossier cannot support an answer."
+    },
+    {
+      name: "Integrity and Conclusion",
+      title: "🛡️ Responsible AI and open source",
+      badge: "Summary", cls: "b-green",
+      display:
+        '<div class="g"><b>Design principles</b></div>' +
+        '<div class="box">' +
+        '<div>✓ Link records come from real Internet Archive captures.</div>' +
+        '<div>✓ AI output is labelled and kept separate from archival evidence.</div>' +
+        '<div>✓ AI inference runs locally through Ollama, with no paid third-party API.</div>' +
+        '<div>✓ Known limits are documented in <code>docs/LIMITATIONS.md</code>.</div></div>' +
+        '<div class="m" style="margin-top:8px">Run it yourself: <code>streamlit run app.py</code>. Run the tests: <code>python -m unittest discover -s tests -v</code>.</div>',
+      narration: "Web Séance shows how digital archaeology and generative AI can work together responsibly: evidence stays traceable, AI stays labelled, and uncertainty is stated openly."
+    }
+  ];
+
+  var current = 0, timer = null;
+  var $ = function (id) { return document.getElementById(id); };
+  var dotsEl = $("dots");
+
+  scenes.forEach(function (s, i) {
+    var d = document.createElement("button");
+    d.type = "button";
+    d.setAttribute("aria-label", "Go to scene " + (i + 1) + ": " + s.name);
+    d.addEventListener("click", function () { pause(); go(i); });
+    dotsEl.appendChild(d);
+  });
+
+  function render() {
+    var s = scenes[current];
+    $("scene-indicator").textContent = "Scene " + (current + 1) + " of " + scenes.length;
+    $("scene-name").textContent = s.name;
+    $("bar").style.width = ((current + 1) / scenes.length * 100) + "%";
+    $("bar-wrap").setAttribute("aria-valuenow", current + 1);
+    $("scene-title").textContent = s.title;
+    var b = $("scene-badge");
+    b.textContent = s.badge;
+    b.className = "badge mono " + s.cls;
+    $("scene-display").innerHTML = s.display;
+    $("narration-text").textContent = s.narration;
+    $("btn-prev").disabled = current === 0;
+    $("btn-next").disabled = current === scenes.length - 1;
+    Array.prototype.forEach.call(dotsEl.children, function (d, i) {
+      d.setAttribute("aria-current", i === current ? "true" : "false");
+    });
+    if (!timer) {
+      $("btn-play").textContent = current === scenes.length - 1 ? "↺ Replay" : "▶ Play";
+    }
+  }
+
+  function go(i) { current = Math.max(0, Math.min(scenes.length - 1, i)); render(); }
+
+  function play() {
+    if (current === scenes.length - 1) { current = 0; render(); }
+    $("btn-play").textContent = "⏸ Pause";
+    timer = setInterval(function () {
+      if (current < scenes.length - 1) { go(current + 1); } else { pause(); }
+    }, 7000);
+  }
+
+  function pause() {
+    if (timer) { clearInterval(timer); timer = null; }
+    render();
+  }
+
+  $("btn-prev").addEventListener("click", function () { pause(); go(current - 1); });
+  $("btn-next").addEventListener("click", function () { pause(); go(current + 1); });
+  $("btn-play").addEventListener("click", function () { timer ? pause() : play(); });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight") { pause(); go(current + 1); }
+    if (e.key === "ArrowLeft") { pause(); go(current - 1); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
