@@ -27,7 +27,7 @@ class EvidenceStore:
         self.evidence_id_index: Dict[str, Dict] = {}
         self.load()
 
-    
+    def load(self):
         """Loads evidence from disk if present."""
         self.pages = {}
         self.links_by_page = {}
@@ -66,7 +66,7 @@ class EvidenceStore:
                                 "content_summary": p.get("content_summary", ""),
                                 "unique_links_recorded": len(p.get("links", []))
                             }
-                        
+
                         page_links = []
                         for l in p.get("links", []):
                             # Ensure required fields
