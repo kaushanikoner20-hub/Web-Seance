@@ -27,7 +27,7 @@ class EvidenceStore:
         self.evidence_id_index: Dict[str, Dict] = {}
         self.load()
 
-    def load(self):
+    
         """Loads evidence from disk if present."""
         self.pages = {}
         self.links_by_page = {}

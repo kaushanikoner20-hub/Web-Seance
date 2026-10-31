@@ -56,6 +56,15 @@ archive_client = get_archive_client()
 if "selected_page_id" not in st.session_state:
     st.session_state.selected_page_id = "P1"
 
+if "live_cdx_captures" not in st.session_state:
+    st.session_state.live_cdx_captures = []
+
+if "live_cdx_status" not in st.session_state:
+    st.session_state.live_cdx_status = None
+
+if "excavated_captures" not in st.session_state:
+    st.session_state.excavated_captures = set()
+
 if "last_ai_result" not in st.session_state:
     st.session_state.last_ai_result = None
 
@@ -284,47 +293,115 @@ elif "Archive Explorer" in nav_view:
 
             submit_search = st.form_submit_button("Query Internet Archive CDX", type="primary")
 
+        
         if submit_search:
             with st.spinner(f"Querying CDX server for {custom_url}..."):
-                res = archive_client.query_cdx(custom_url, limit=3, from_year=from_yr, to_year=to_yr)
+                res = archive_client.query_cdx(
+                    custom_url,
+                    limit=3,
+                    from_year=from_yr,
+                    to_year=to_yr
+                )
 
             if res["status"] == "captures_found" and res["captures"]:
-                st.success(f"Found {len(res['captures'])} verified captures in the Internet Archive!")
-                for idx, cap in enumerate(res["captures"]):
-                    ts = cap["timestamp"]
-                    c_date = f"{ts[:4]}-{ts[4:6]}-{ts[6:8]}"
-                    col_cap, col_pull = st.columns([3, 1])
-                    with col_cap:
-                        st.markdown(
-                            f"**Capture #{idx+1}**: Timestamp `{ts}` ({c_date}) — "
-                            f"[View Raw Archive]({cap['capture_url']})"
-                        )
-                    with col_pull:
-                        if st.button(f"Excavate Capture #{idx+1}", key=f"excavate_{ts}"):
-                            with st.spinner("Fetching raw capture and extracting links..."):
-                                success, html_text, err = archive_client.fetch_raw_capture(ts, cap["original_url"])
-                                if success:
-                                    next_pid = f"P{len(store.pages) + 1}"
-                                    evidence = extract_page_evidence(
-                                        html_content=html_text,
-                                        original_url=cap["original_url"],
-                                        page_id=next_pid,
-                                        capture_timestamp=ts,
-                                        archive_capture_url=cap["capture_url"]
-                                    )
-                                    store.add_page_evidence(evidence)
-                                    st.session_state.selected_page_id = next_pid
-                                    st.success(
-                                        f"Excavation complete! Added {next_pid} with "
-                                        f"{evidence['unique_links_recorded']} verified hyperlinks."
-                                    )
-                                    st.rerun()
-                                else:
-                                    st.error(f"Failed to fetch capture: {err}")
+                st.session_state.live_cdx_captures = res["captures"]
+                st.session_state.live_cdx_status = "captures_found"
+                st.session_state.excavated_captures = set()
+
             elif res["status"] == "no_captures":
-                st.warning("No 200-OK captures were returned by the CDX API for this URL and year range.")
+                st.session_state.live_cdx_captures = []
+                st.session_state.live_cdx_status = "no_captures"
+
             else:
-                st.error(f"Archive search failed: {res.get('error', 'Unknown error')}")
+                st.session_state.live_cdx_captures = []
+                st.session_state.live_cdx_status = res.get(
+                    "error", "Unknown error"
+                )
+
+        captures = st.session_state.live_cdx_captures
+
+        if st.session_state.live_cdx_status == "captures_found" and captures:
+            st.success(
+                f"Found {len(captures)} verified captures in the Internet Archive!"
+            )
+
+            for idx, cap in enumerate(captures):
+                ts = cap["timestamp"]
+                c_date = f"{ts[:4]}-{ts[4:6]}-{ts[6:8]}"
+                capture_key = f"{ts}_{idx}"
+
+                already_excavated = (
+                    capture_key in st.session_state.excavated_captures
+                )
+
+                col_cap, col_pull = st.columns([3, 1])
+
+                with col_cap:
+                    st.markdown(
+                        f"**Capture #{idx+1}**: Timestamp `{ts}` "
+                        f"({c_date}) — "
+                        f"[View Raw Archive]({cap['capture_url']})"
+                    )
+
+                    if already_excavated:
+                        st.caption("✓ Already excavated")
+
+                with col_pull:
+                    if st.button(
+                        f"Excavate Capture #{idx+1}",
+                        key=f"excavate_{ts}_{idx}",
+                        disabled=already_excavated
+                    ):
+                        with st.spinner(
+                            "Fetching raw capture and extracting links..."
+                        ):
+                            success, html_text, err = (
+                                archive_client.fetch_raw_capture(
+                                    ts, cap["original_url"]
+                                )
+                            )
+
+                            if success:
+                                next_pid = f"P{len(store.pages) + 1}"
+
+                                evidence = extract_page_evidence(
+                                    html_content=html_text,
+                                    original_url=cap["original_url"],
+                                    page_id=next_pid,
+                                    capture_timestamp=ts,
+                                    archive_capture_url=cap["capture_url"]
+                                )
+
+                                store.add_page_evidence(evidence)
+
+                                st.session_state.selected_page_id = next_pid
+                                st.session_state.excavated_captures.add(
+                                    capture_key
+                                )
+
+                                st.success(
+                                    f"Excavation complete! Added {next_pid} "
+                                    f"with {evidence['unique_links_recorded']} "
+                                    f"verified hyperlinks."
+                                )
+
+                                st.rerun()
+
+                            else:
+                                st.error(f"Failed to fetch capture: {err}")
+
+        elif st.session_state.live_cdx_status == "no_captures":
+            st.warning(
+                "No 200-OK captures were returned by the CDX API "
+                "for this URL and year range."
+            )
+
+        elif st.session_state.live_cdx_status not in (
+            None, "captures_found"
+        ):
+            st.error(
+                f"Archive search failed: {st.session_state.live_cdx_status}"
+            )
 
 
 # ==============================================================================

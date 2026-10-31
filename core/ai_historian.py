@@ -65,38 +65,39 @@ class AIHistorian:
 
         return status
 
-    def format_evidence_payload(self, page: Dict, links: List[Dict], max_links: int = 14) -> str:
-        """Formats verified page and link evidence into an unambiguous text payload."""
-        lines = [
-            "### ARCHIVAL EVIDENCE DOSSIER",
-            f"Page Identifier: {page.get('page_id')}",
-            f"Original URL: {page.get('source_url')}",
-            f"Archival Capture Date: {page.get('capture_timestamp', '')[:8]} (UTC: {page.get('capture_timestamp', '')})",
-            f"Archived Page Title: {page.get('title')}",
-            f"Content Excerpt: \"{page.get('content_summary', '')[:280]}\"",
-            "",
-            "VERIFIED OUTGOING HYPERLINKS EXTRACTED FROM ARCHIVED HTML:"
-        ]
+    
+def format_evidence_payload(self, page: Dict, links: List[Dict]) -> str:
+    """Formats all verified page and link evidence into a text payload."""
 
-        if not links:
-            lines.append("No outgoing hyperlinks were detected in the archived HTML of this capture.")
-        else:
-            # External links are most relevant for archaeological inquiries about outbound connections
-            external_links = [l for l in links if l.get("scope") == "external"]
-            same_site_links = [l for l in links if l.get("scope") == "same_site"]
-            selected_links = external_links + same_site_links[:max(0, max_links - len(external_links))]
-            selected_links = selected_links[:max_links]
+    lines = [
+        "### ARCHIVAL EVIDENCE DOSSIER",
+        f"Page Identifier: {page.get('page_id')}",
+        f"Original URL: {page.get('source_url')}",
+        f"Archival Capture Date: {page.get('capture_timestamp', '')[:8]} (UTC: {page.get('capture_timestamp', '')})",
+        f"Archived Page Title: {page.get('title')}",
+        f"Content Excerpt: \"{page.get('content_summary', '')[:280]}\"",
+        "",
+        f"TOTAL VERIFIED OUTGOING HYPERLINKS: {len(links)}",
+        "VERIFIED OUTGOING HYPERLINKS EXTRACTED FROM ARCHIVED HTML:"
+    ]
 
-            for l in selected_links:
-                scope_label = "EXTERNAL" if l.get("scope") == "external" else "SAME-SITE"
-                dest = l.get("destination_url")
-                anchor = l.get("anchor_text", "").strip()
-                anchor_part = f" (Anchor: \"{anchor}\")" if anchor and anchor != "[No anchor text]" else ""
-                lines.append(f"- [{l['evidence_id']}] [{scope_label}] -> {dest}{anchor_part}")
+    if not links:
+        lines.append("No outgoing hyperlinks were detected in the archived HTML of this capture.")
+    else:
+        for l in links:
+            scope_label = "EXTERNAL" if l.get("scope") == "external" else "SAME-SITE"
+            dest = l.get("destination_url")
+            anchor = l.get("anchor_text", "").strip()
+            anchor_part = f" (Anchor: \"{anchor}\")" if anchor and anchor != "[No anchor text]" else ""
 
-        lines.append("")
-        lines.append("END OF EVIDENCE DOSSIER.")
-        return "\n".join(lines)
+            lines.append(
+                f"- [{l['evidence_id']}] [{scope_label}] -> {dest}{anchor_part}"
+            )
+
+    lines.append("")
+    lines.append("END OF EVIDENCE DOSSIER.")
+
+    return "\n".join(lines)
 
     def validate_response(self, response_text: str, valid_evidence_ids: List[str]) -> Dict:
         """

@@ -1,7 +1,6 @@
 {
   "version": "1.0",
-  "curation": "Seminal Early Web Pioneers & Artifacts",
-  "total_pages": 5,
+  "total_pages": 6,
   "pages": [
     {
       "page_id": "P1",
@@ -82,6 +81,18 @@
       "archive_injected_skipped": 0,
       "unique_links_recorded": 20,
       "retrieval_status": "AUTHENTIC_INTERNET_ARCHIVE_RECORD"
+    },
+    {
+      "page_id": "P6",
+      "title": "Jeffrey Zeldman Presents",
+      "source_url": "http://www.zeldman.com/toc.html",
+      "source_host": "zeldman.com",
+      "capture_timestamp": "19970330110648",
+      "archive_capture_url": "https://web.archive.org/web/19970330110648/http://www.zeldman.com:80/toc.html",
+      "content_sha256": "8df57fa11eee6a7a4e88b1bac448c5a1ea175cb29a149ca67404a4655f2a07f0",
+      "content_length_bytes": 21696,
+      "content_summary": "THIS SITE IS ALWAYS GROWING. ARE YOU? GOOD EVENING, thrill seekers. To heighten pleasure, turn off underlining. If you missed the entrance, try again. This is a chrome- free zone. If you need buttons, buy a VCR. In a hurry? Try the Ad Graveyard or Pardon My Icons for a quick taste. Return at your leisure. Thanks to the taste meisters who've...",
+      "unique_links_recorded": 41
     }
   ]
 }
